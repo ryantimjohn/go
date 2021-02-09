@@ -8,15 +8,12 @@ import (
 //Valid tests if a number is a valid Luhn number
 func Valid(s string) bool {
 	stripped := strings.ReplaceAll(s, " ", "")
-	length := len(stripped)
-	double := length%2 == 0
-	if length < 2 {
-		return false
-	}
+	double := len(stripped)%2 == 0
+	valid := len(stripped) > 1
 	sum := 0
 	for _, c := range stripped {
-		if !(unicode.IsNumber(c)) {
-			return false
+		if !(unicode.IsDigit(c)) {
+			valid = false
 		}
 		n := int(c) - 48
 		if double {
@@ -27,9 +24,12 @@ func Valid(s string) bool {
 		}
 		sum += n
 		double = !double
+		if !valid {
+			break
+		}
 	}
 	if sum%10 != 0 {
-		return false
+		valid = false
 	}
-	return true
+	return valid
 }
